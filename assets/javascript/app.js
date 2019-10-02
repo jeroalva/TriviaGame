@@ -98,6 +98,8 @@ var answers = ["Es el codigo con el cual se referencia un articulo en un documen
 "Es la unidad de medida con la cual le vendemos un articulo a un cliente",
 "Es \"cortina\"",
 ];
+
+correctAnswers = [3,1,3,1,2,3,3,1,1,1,2,2,1,3,2,1,1,1,2,1,1,2,1,2]
 for (i=0;i<20;i++){
     problems.push(i);
     var answ = i * 3;
@@ -106,5 +108,6 @@ for (i=0;i<20;i++){
         answer1: answers[answ],
         answer2: answers[answ+1],
         answer3: answers[answ+2],
+        correctAnsw: correctAnswers[i]
     }
 }
