@@ -11,7 +11,111 @@
 </head>
 <body>
              <div id="site-header-wrapper" class=" " style=" height: 147px;">
-               <div id="container"></div> 
+                    <div class="row bg-danger pb-1">
+                        <h4 class="col ml-5" id="headerJero">Cortinas Mexico</p>
+                    </div>
+            </div>
+            <div class="container">
+                <div class="jumbotron d-none" id="bienvenida">
+                        <h1 class="display-4">Hola!</h1>
+                        <p class="lead">Esta es una trivia acerca del uso general del SAP Business One</p>
+                        <hr class="my-4">
+                        <p>Al dar clic en el boton "Start" se mostraran preguntas con posibles respuestas, el tiempo esta contado en cada una de las preguntas asi es que apurate a contestarlas!</p>
+                        <p class="lead">
+                            <a class="btn btn-primary btn-lg" href="#" role="button" id="startButton">Start</a>
+                        </p>
+                    </div>
+                <div class="row d-none" id="problemRow">
+                    <div class="col" id="problemCol">
+                        <div class="row" id="questionRow">
+                                <div class="column" id="questionCol">
+                                    <h2 id="questionContent">
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="row" id="answersRow">
+                                <form id="answersForm">
+                                    <div class="row" id="answer1Row">
+                                        <div class="column" id="answer1Col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answersRadio" id="answer1Radio" value=1 checked>
+                                                
+                                                <label class="form-check-label" for="answer1Radio" id="answer1Label">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="answer2Row">
+                                        <div class="column" id="answer2Col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answersRadio" id="answer2Radio" value=2>
+                                                
+                                                <label class="form-check-label" for="answer2Radio" id="answer2Label">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="answer3Radio">
+                                        <div class="column" id="answer3Col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answersRadio" id="answer3Radio" value=3>
+                                                
+                                                <label class="form-check-label" for="answer3Radio" id="answer3Label">
+                                                </label>
+                                            </div>                        
+                                        </div>
+                                    </div>
+                                </form>                
+                            </div>
+                            <div class="row mt-3" id="submitButtonRow">
+                                <div class="col" id="submitButtonCol">
+                                    <button type="button" class="btn btn-success" id="submitButton">¡Grabar respuesta!</button>
+                                </div>
+                            </div>        
+                    </div>
+                </div>
+                <div class="row d-none" id="resultsRow">
+                    <div class="col" id="resultsCol">
+                        <div class="row" id="resultExplRor">
+                            <div class="col" id="resultExplCol">
+                                <p id="resultExplContent">!Haz terminado la trivia! Estos son tus resultados:</p>
+                            </div>
+                        </div>
+                        <div class="row" id="resultTextRow">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Aciertos</th>
+                                    <th scope="col">Errores</th>
+                                    <th scope="col">Sin respuesta</th>
+                                    <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <th scope="row">Cant.</th>
+                                    <td id="resCantAciertos"></td>
+                                    <td id="resCantErrores"></td>
+                                    <td id="resCantSinResp"></td>
+                                    <td id="resCantTotal"></td>
+                                    </tr>
+                                    <tr>
+                                    <th scope="row">%</th>
+                                    <td id="porcCantAciertos"></td>
+                                    <td id="porcCantErrores"></td>
+                                    <td id="porcCantSinResp"></td>
+                                    <td id="porcCantTotal"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="row" id="resultChartRow">
+
+                        </div>
+                    </div>
+                </div>
             </div>
   
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

@@ -1,4 +1,9 @@
 var problems=[];
+var usedProblems=[];
+var randomProblem;
+var falseUserAnswers=[];
+var correctUserAnswers=[];
+var timeoutUserAnswers=[];
 var questions=["¿Cual de las siguientes definiciones es correcta para un dato maestro de articulo?",
 "¿Cual es la diferencia entre la numeracion \"Manual\" y la numeracion \"Auto\" en los datos maestros de articulos?",
 "¿Que tenemos que cuidar a la hora de definir la descripcion del articulo?",
@@ -108,6 +113,108 @@ for (i=0;i<20;i++){
         answer1: answers[answ],
         answer2: answers[answ+1],
         answer3: answers[answ+2],
-        correctAnsw: correctAnswers[i]
+        correctAnsw: correctAnswers[i],
+        userAnswer: "",
+        userSubmit: false
     }
 }
+
+
+// Hay un problema con la generacion del numero aleatorio porque por alguna razon ya no encuentra el indez dentro de la matriz de problems
+function newProblem(){
+    var randomProbNum = Math.floor(Math.random()*problems.length);
+    console.log(randomProbNum);
+    randomProblem = problems[randomProbNum];
+    console.log(randomProblem);
+    problems.splice(randomProbNum,1);
+    $("#questionContent").text(randomProblem.question);
+    $("#answer1Label").text(randomProblem.answer1);
+    $("#answer2Label").text(randomProblem.answer2);
+    $("#answer3Label").text(randomProblem.answer3);
+    var attr1 = $("#answer1Radio").attr("checked");
+    var attr2 = $("#answer2Radio").attr("checked");
+    var attr3 = $("#answer3Radio").attr("checked");
+    if(typeof attr1 === typeof undefined && typeof attr1 === false){
+        $("#answer1Radio").attr("checked","");
+    }
+    if(typeof attr2 !== typeof undefined && typeof attr2 !== false){
+        $("#answer1Radio").removeAttr("checked");
+    }
+    if(typeof attr3 !== typeof undefined && typeof attr3 !== false){
+        $("#answer1Radio").removeAttr("checked");
+    }
+}
+
+
+function start(){
+    if($("#bienvenida").attr("class")==="jumbotron d-none"){
+        $("#bienvenida").removeClass("jumbotron d-none").addClass("jumbotron");
+    }
+    if($("#problemRow").attr("class")==="row"){
+        $("#problemRow").removeClass("row").addClass("row d-none");
+    }
+    if($("#resultsRow").attr("class")==="row"){
+        $("#resultsRow").removeClass("row").addClass("row d-none");
+    }
+}
+
+function results(){
+    if($("#bienvenida").attr("class")==="jumbotron"){
+        $("#bienvenida").removeClass("jumbotron").addClass("jumbotron d-none");
+    }
+    if($("#problemRow").attr("class")==="row"){
+        $("#problemRow").removeClass("row").addClass("row d-none");
+    }
+    if($("#resultsRow").attr("class")==="row d-none"){
+        $("#resultsRow").removeClass("row d-none").addClass("row");
+    }
+    for(i=0;i<usedProblems.length;i++){
+        if(usedProblems[i].userSubmit === true && usedProblems[i].userAnswer===usedProblems[i].correctAnsw){
+            correctUserAnswers.push(usedProblems[i]);
+        }
+        else if (usedProblems[i].userSubmit === false){
+            timeoutUserAnswers.push(usedProblems[i]);
+        }
+        else{
+            falseUserAnswers.push(usedProblems[i]);
+        }
+    }
+    $("#resCantAciertos").text(correctUserAnswers.length);
+    $("#resCantErrores").text(falseUserAnswers.length);
+    $("#resCantSinResp").text(timeoutUserAnswers.length);
+    $("#resCantTotal").text(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length);
+
+    $("#porcCantAciertos").text((correctUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*100 + "%");
+    $("#porcCantErrores").text((falseUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*100 + "%");
+    $("#porcCantSinResp").text((timeoutUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*100 + "%");
+    $("#porcCantTotal").text("100.00%");
+
+
+}
+
+start();
+
+$("#startButton").click(function(){
+    // event.preventDefault();
+    newProblem();
+    if($("#bienvenida").attr("class")==="jumbotron"){
+        $("#bienvenida").removeClass("jumbotron").addClass("jumbotron d-none");
+    }
+    if($("#problemRow").attr("class")==="row d-none"){
+        $("#problemRow").removeClass("row d-none").addClass("row");
+    }
+})
+
+$("#submitButton").click(function(){
+    if(problems.length>0){
+        var radioValue = $("input[name='answersRadio']:checked").val();
+        randomProblem.userAnswer = radioValue;
+        randomProblem.userSubmit = true;
+        usedProblems.push(randomProblem);
+        newProblem();
+    }
+    else{
+        results();
+    }
+    
+});
