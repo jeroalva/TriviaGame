@@ -4,6 +4,12 @@ var randomProblem;
 var falseUserAnswers=[];
 var correctUserAnswers=[];
 var timeoutUserAnswers=[];
+var clockRunning = false;
+var intervalId;
+var timerId;
+var timerRunning = false;
+var timePerQuestion = 30;
+var liveTime = timePerQuestion;
 var questions=["¿Cual de las siguientes definiciones es correcta para un dato maestro de articulo?",
 "¿Cual es la diferencia entre la numeracion \"Manual\" y la numeracion \"Auto\" en los datos maestros de articulos?",
 "¿Que tenemos que cuidar a la hora de definir la descripcion del articulo?",
@@ -105,23 +111,11 @@ var answers = ["Es el codigo con el cual se referencia un articulo en un documen
 ];
 
 correctAnswers = [3,1,3,1,2,3,3,1,1,1,2,2,1,3,2,1,1,1,2,1,1,2,1,2]
-for (i=0;i<20;i++){
-    problems.push(i);
-    var answ = i * 3;
-    problems[i] = {
-        question: questions[i],
-        answer1: answers[answ],
-        answer2: answers[answ+1],
-        answer3: answers[answ+2],
-        correctAnsw: correctAnswers[i],
-        userAnswer: "",
-        userSubmit: false
-    }
-}
-
 
 // Hay un problema con la generacion del numero aleatorio porque por alguna razon ya no encuentra el indez dentro de la matriz de problems
 function newProblem(){
+    liveTime = timePerQuestion;
+    $("#timerContent").text("00:" + timePerQuestion);
     var randomProbNum = Math.floor(Math.random()*problems.length);
     console.log(randomProbNum);
     randomProblem = problems[randomProbNum];
@@ -143,10 +137,44 @@ function newProblem(){
     if(typeof attr3 !== typeof undefined && typeof attr3 !== false){
         $("#answer1Radio").removeAttr("checked");
     }
+    if (!clockRunning) {
+        intervalId = setInterval(count, 1000);
+        clockRunning = true;
+      }
+    if (!timerRunning) {
+        console.log("Si entra");
+        timerId = setInterval(timeOut, timePerQuestion * 1000);
+        timerRunning = true;
+    }    
+console.log(clockRunning);
+console.log(timerRunning);
 }
 
 
 function start(){
+
+    problems=[];
+    randomProblem = "";
+    falseUserAnswers = [];
+    correctUserAnswers = [];
+    timeoutUserAnswers = [];
+    clockRunning = false;
+    timerRunning = false;
+
+    for (i=0;i<20;i++){
+        problems.push(i);
+        var answ = i * 3;
+        problems[i] = {
+            question: questions[i],
+            answer1: answers[answ],
+            answer2: answers[answ+1],
+            answer3: answers[answ+2],
+            correctAnsw: correctAnswers[i],
+            userAnswer: "",
+            userSubmit: false
+        }
+    }    
+
     if($("#bienvenida").attr("class")==="jumbotron d-none"){
         $("#bienvenida").removeClass("jumbotron d-none").addClass("jumbotron");
     }
@@ -169,7 +197,7 @@ function results(){
         $("#resultsRow").removeClass("row d-none").addClass("row");
     }
     for(i=0;i<usedProblems.length;i++){
-        if(usedProblems[i].userSubmit === true && usedProblems[i].userAnswer===usedProblems[i].correctAnsw){
+        if(usedProblems[i].userSubmit === true && parseInt(usedProblems[i].userAnswer)===usedProblems[i].correctAnsw){
             correctUserAnswers.push(usedProblems[i]);
         }
         else if (usedProblems[i].userSubmit === false){
@@ -184,18 +212,52 @@ function results(){
     $("#resCantSinResp").text(timeoutUserAnswers.length);
     $("#resCantTotal").text(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length);
 
-    $("#porcCantAciertos").text((correctUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*100 + "%");
-    $("#porcCantErrores").text((falseUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*100 + "%");
-    $("#porcCantSinResp").text((timeoutUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*100 + "%");
+    $("#porcCantAciertos").text(Math.round((correctUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*10000)/100 + "%");
+    $("#porcCantErrores").text(Math.round((falseUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*10000)/100 + "%");
+    $("#porcCantSinResp").text(Math.round((timeoutUserAnswers.length/(correctUserAnswers.length + falseUserAnswers.length + timeoutUserAnswers.length))*10000)/100 + "%");
     $("#porcCantTotal").text("100.00%");
-
-
 }
 
+function count() {
+    liveTime--;
+    var converted = timeConverter(liveTime);
+    $("#timerContent").text(converted);
+  }
+  
+
+
+function timeConverter(t) {
+
+    var minutes = Math.floor(t / 60);
+    var seconds = t - (minutes * 60);
+  
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
+  
+    if (minutes === 0) {
+      minutes = "00";
+    }
+    else if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+  
+    return minutes + ":" + seconds;
+  }
+
+  function timeOut(){
+    clearInterval(intervalId);
+    clearInterval(timerId);
+    timerRunning = false;
+    clockRunning = false;
+    usedProblems.push(randomProblem);
+    newProblem();
+  }
 start();
 
 $("#startButton").click(function(){
     // event.preventDefault();
+
     newProblem();
     if($("#bienvenida").attr("class")==="jumbotron"){
         $("#bienvenida").removeClass("jumbotron").addClass("jumbotron d-none");
@@ -207,6 +269,10 @@ $("#startButton").click(function(){
 
 $("#submitButton").click(function(){
     if(problems.length>0){
+        clearInterval(intervalId);
+        clearInterval(timerId);
+        timerRunning = false;
+        clockRunning = false;
         var radioValue = $("input[name='answersRadio']:checked").val();
         randomProblem.userAnswer = radioValue;
         randomProblem.userSubmit = true;
@@ -217,4 +283,8 @@ $("#submitButton").click(function(){
         results();
     }
     
+});
+
+$("#restartButton").click(function(){
+    start();
 });

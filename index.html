@@ -10,11 +10,9 @@
     <link href="https://fonts.googleapis.com/css?family=Cardo&display=swap" rel="stylesheet">
 </head>
 <body>
-             <div id="site-header-wrapper" class=" " style=" height: 147px;">
-                    <div class="row bg-danger pb-1">
-                        <h4 class="col ml-5" id="headerJero">Cortinas Mexico</p>
-                    </div>
-            </div>
+            <nav class="navbar navbar-light bg-danger">
+                <span class="navbar-brand mb-0 h1">Cortinas Mexico</span>
+            </nav>
             <div class="container">
                 <div class="jumbotron d-none" id="bienvenida">
                         <h1 class="display-4">Hola!</h1>
@@ -27,6 +25,12 @@
                     </div>
                 <div class="row d-none" id="problemRow">
                     <div class="col" id="problemCol">
+                        <div class="row" id="timerRow">
+                            <div clas="col" id="timerCol">
+                                <h2 id="timerContent">
+                                </h2>
+                            </div>
+                        </div>
                         <div class="row" id="questionRow">
                                 <div class="column" id="questionCol">
                                     <h2 id="questionContent">
@@ -76,6 +80,12 @@
                 </div>
                 <div class="row d-none" id="resultsRow">
                     <div class="col" id="resultsCol">
+                        <div class="row" id="resultGifRow">
+                            <div class="col" id="resultGifCol">
+                                <div id="resultGifContent"></div>
+                            </div>
+                        </div>
+        
                         <div class="row" id="resultExplRor">
                             <div class="col" id="resultExplCol">
                                 <p id="resultExplContent">!Haz terminado la trivia! Estos son tus resultados:</p>
@@ -111,8 +121,10 @@
                             </table>
 
                         </div>
-                        <div class="row" id="resultChartRow">
-
+                        <div class="row" id="resultBotton">
+                            <div class="col" id="resultBottonCol">
+                                <button type="button" class="btn btn-success" id="restartButton">¡Volver a empezar!</button>
+                            </div>
                         </div>
                     </div>
                 </div>
